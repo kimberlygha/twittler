@@ -8,11 +8,11 @@
   <body>
     <header>
       <h1 class= "title">Twittler</h1>
-      <p>See what your friends are saying</p>
+      <p>Stay connected with the world</p>
       <nav> 
         <ul>
           <li class="refresh">Refresh Feed</li>
-          <li>Home</li>
+          <li class ="home">Home</li>
         </ul>
       </nav>
     </header>
@@ -28,26 +28,30 @@
         while(index >= 0){
           var tweet = streams.home[index];
           var $tweet = $('<div class = "tweet"></div>');
-          $tweet.text('@ '+tweet.user + ': ' + tweet.message);
+          $tweet.html('@<span class="name">'+tweet.user+'</span>:' + tweet.message);
           $tweet.appendTo($('.tweetFeed'));
           var $time = $('<div class = "time">'+tweet.created_at+'</div>');
           $time.appendTo($tweet);
           index -= 1;
         }
-
+    
         $('.refresh').on('click', function(){
           var whole = streams.home.length; 
           var count = whole-total;
           while(count >= 0){
             var tweet = streams.home[whole-count];
             var $tweet = $('<div class = "tweet"></div>');
-            $tweet.text('@'+tweet.user + ': ' + tweet.message);
+            $tweet.html('@<span class="name">'+tweet.user + '</span>: ' + tweet.message);
             $tweet.prependTo($('.tweetFeed'));
             var $time = $('<div class = "time">'+tweet.created_at+'</div>');
             $time.appendTo($tweet);
             count -=1; 
           }
         });
+        $('.name').on('click', function(){
+
+        });
+
       });
 
     </script>

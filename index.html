@@ -21,6 +21,7 @@
     <script>
 
       $(document).ready(function(){
+        console.log("READY");
         var $body = $('body');
 
         function twittle(source, x){
@@ -32,10 +33,27 @@
           return $tweet;
         }
 
+        function addNameListener() {
+          $('.name').on('click', function(){
+            console.log("clicked a name");
+            var user = $(this).text();
+            var feed = streams.users[user];
+            var count = feed.length-1;
+            $('section').data('source','users')
+            $('.tweetFeed').empty();
+            while(count>=0){
+              twittle(feed, count).appendTo($('.tweetFeed'));
+              addNameListener();
+              count -=1; 
+            }
+          });
+        };
+
 
         var index = streams.home.length -1;
         while(index >= 0){
           twittle(streams.home, index).appendTo($('.tweetFeed'));
+          addNameListener();
           index -= 1;
         }
     
@@ -54,33 +72,24 @@
           var count = whole-($('.tweet').length);
           while(count >= 0){
             twittle(x,(whole-count-1)).prependTo($('.tweetFeed'));
-            count -=1; 
-          }
-        });
-
-        $('.name').on('click', function(){
-          console.log("CLICKED");
-          var user = $(this).text();
-          var feed = streams.users[user];
-          var count = feed.length-1;
-          $('section').data('source','users')
-          $('.tweetFeed').empty();
-          while(count>=0){
-            twittle(feed, count).appendTo($('.tweetFeed'));
+            addNameListener();
             count -=1; 
           }
         });
 
         $('.home').on('click', function(){
           console.log("clicked Home button");
+          addNameListener();
           $('.tweetFeed').empty();
           var count = streams.home.length-1;
           $('section').data('source','home');
           while(count >=0){
             twittle(streams.home, count).appendTo(".tweetFeed");
+            addNameListener();
             count -=1; 
           }
-        })
+        });
+        addNameListener();
 
       });
 

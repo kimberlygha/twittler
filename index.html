@@ -23,34 +23,56 @@
       $(document).ready(function(){
         var $body = $('body');
 
-        var total = streams.home.length;
-        var index = total-1;
-        while(index >= 0){
-          var tweet = streams.home[index];
+        function twittle(source, x){
+          var tweet = source[x];
           var $tweet = $('<div class = "tweet"></div>');
           $tweet.html('@<span class="name">'+tweet.user+'</span>:' + tweet.message);
-          $tweet.appendTo($('.tweetFeed'));
           var $time = $('<div class = "time">'+tweet.created_at+'</div>');
           $time.appendTo($tweet);
+          return $tweet;
+        }
+
+
+        $('.tweetFeed').val("streams.home")
+        var index = streams.home.length -1;
+        while(index >= 0){
+          twittle(streams.home, index).appendTo($('.tweetFeed'));
           index -= 1;
         }
     
         $('.refresh').on('click', function(){
-          var whole = streams.home.length; 
-          var count = whole-total;
+          console.log("clicked refresh");
+          var source = $('.tweetFeed').val();
+          var whole = source.length; 
+          var count = whole-($('div').length);
           while(count >= 0){
-            var tweet = streams.home[whole-count];
-            var $tweet = $('<div class = "tweet"></div>');
-            $tweet.html('@<span class="name">'+tweet.user + '</span>: ' + tweet.message);
-            $tweet.prependTo($('.tweetFeed'));
-            var $time = $('<div class = "time">'+tweet.created_at+'</div>');
-            $time.appendTo($tweet);
+            twittle(source,(whole-count-1)).prependTo($('.tweetFeed'));
             count -=1; 
           }
         });
-        $('.name').on('click', function(){
 
+        $('.name').on('click', function(){
+          console.log("CLICKED");
+          var user = $(this).text();
+          var feed = streams.users[user]
+          var count = feed.length-1;
+          $('.tweetFeed').empty();
+          $('.tweetFeed').val(feed);
+          while(count>=0){
+            twittle(feed, count).appendTo($('.tweetFeed'));
+            count -=1; 
+          }
         });
+
+        $('.home').on('click', function(){
+          $('.tweetFeed').empty();
+          var count = streams.home.length-1;
+          $('.tweetFeed').val('streams.home');
+          while(count >=0){
+            twittle(streams.home, count).appendTo(".tweetFeed");
+            count -=1; 
+          }
+        })
 
       });
 

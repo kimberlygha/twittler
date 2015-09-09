@@ -16,7 +16,7 @@
         </ul>
       </nav>
     </header>
-    <section class="tweetFeed">
+    <section class="tweetFeed" data-source="home">
     </section>
     <script>
 
@@ -27,13 +27,12 @@
           var tweet = source[x];
           var $tweet = $('<div class = "tweet"></div>');
           $tweet.html('@<span class="name">'+tweet.user+'</span>:' + tweet.message);
-          var $time = $('<div class = "time">'+tweet.created_at+'</div>');
+          var $time = $('<div class ="time">'+tweet.created_at+'</div>');
           $time.appendTo($tweet);
           return $tweet;
         }
 
 
-        $('.tweetFeed').val("streams.home")
         var index = streams.home.length -1;
         while(index >= 0){
           twittle(streams.home, index).appendTo($('.tweetFeed'));
@@ -42,11 +41,19 @@
     
         $('.refresh').on('click', function(){
           console.log("clicked refresh");
-          var source = $('.tweetFeed').val();
-          var whole = source.length; 
-          var count = whole-($('div').length);
+          var source = $('section').data('source');
+          var x = undefined;
+          if(source == 'users'){
+            var user = $('.name').first().text();
+            x = streams.users[user];
+          }
+          else{
+            x = streams.home;
+          }
+          var whole = x.length; 
+          var count = whole-($('.tweet').length);
           while(count >= 0){
-            twittle(source,(whole-count-1)).prependTo($('.tweetFeed'));
+            twittle(x,(whole-count-1)).prependTo($('.tweetFeed'));
             count -=1; 
           }
         });
@@ -54,10 +61,10 @@
         $('.name').on('click', function(){
           console.log("CLICKED");
           var user = $(this).text();
-          var feed = streams.users[user]
+          var feed = streams.users[user];
           var count = feed.length-1;
+          $('section').data('source','users')
           $('.tweetFeed').empty();
-          $('.tweetFeed').val(feed);
           while(count>=0){
             twittle(feed, count).appendTo($('.tweetFeed'));
             count -=1; 
@@ -65,9 +72,10 @@
         });
 
         $('.home').on('click', function(){
+          console.log("clicked Home button");
           $('.tweetFeed').empty();
           var count = streams.home.length-1;
-          $('.tweetFeed').val('streams.home');
+          $('section').data('source')==='streams.home';
           while(count >=0){
             twittle(streams.home, count).appendTo(".tweetFeed");
             count -=1; 

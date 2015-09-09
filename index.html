@@ -75,7 +75,7 @@
           console.log("clicked Home button");
           $('.tweetFeed').empty();
           var count = streams.home.length-1;
-          $('section').data('source')==='streams.home';
+          $('section').data('source','home');
           while(count >=0){
             twittle(streams.home, count).appendTo(".tweetFeed");
             count -=1; 
